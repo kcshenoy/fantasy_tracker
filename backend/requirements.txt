@@ -1,0 +1,9 @@
+Flask
+pymongo
+python-dotenv
+pandas
+numpy
+seaborn
+pymongo[srv]
+Flask-PyMongo
+pythondns
