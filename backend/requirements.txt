@@ -7,3 +7,5 @@ seaborn
 pymongo[srv]
 Flask-PyMongo
 pythondns
+flask-cors
+nba_api

@@ -15,18 +15,19 @@ app = Flask(__name__, template_folder='../frontend/templates', static_folder='..
 CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:8001"}})
 
 team = []
+active_players_data = players.get_active_players()
+active_players = [{"name": player['full_name']} for player in active_players_data if player['is_active']]
 
 # Serve the index.html file
 @app.route('/')
 def index():
-    print(players.get_active_players()[0])
     return render_template('index.html')  # Serve the HTML file
 
 # API route to add a player
 @app.route('/add_player', methods=["POST"])
 def add_player():
     player_name = request.json.get('name')
-    print(player_name)
+    print(team)
     if player_name:
         team.append({"name": player_name})
         return jsonify({"name": player_name}), 201
@@ -36,10 +37,7 @@ def add_player():
 @app.route('/delete_player/<string:name>', methods=["DELETE"])
 def delete_player(name):
     global team
-    print(team, name)
-    print([entry for entry in team if entry['name'] != name], 'team')
     team = [entry for entry in team if entry['name'] != name]
-    print('after', team)
     return jsonify({"message": f"Player {name} deleted"}), 200
 
 # API route to get team

@@ -17,25 +17,27 @@ document.addEventListener("DOMContentLoaded", function () {
     // Load current players from the backend when the page loads
 
     fetchPlayers();
-  
+    fetchActivePlayers();  
+
     // Add player on button click
-    addPlayerButton.addEventListener("click", async () => {
-      const playerName = playerNameInput.value;
-      if (playerName) {
-        // Make a request to add the player
-        const response = await fetch('/add_player', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: playerName }),
-        });
-  
-        if (response.ok) {
-          fetchPlayers(); // Re-fetch the updated player list
-        }
+  addPlayerButton.addEventListener("click", async () => {
+    const playerName = playerNameInput.value;
+    if (playerName) {
+      // Make a request to add the player
+      const response = await fetch('/add_player', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: playerName }),
+      });
+
+      if (response.ok) {
+        console.log('success')
+        fetchPlayers(); // Re-fetch the updated player list
       }
-    });
+    }
+  });
 
     // Fetch and display the active players for search
     async function fetchActivePlayers() {
@@ -47,32 +49,17 @@ document.addEventListener("DOMContentLoaded", function () {
       updateActivePlayersList(activePlayers);
   }
 
-  // Update the datalist with active players
-  function updateActivePlayersList(players) {
+    // Update the datalist with filtered players
+    function updateActivePlayersList(players) {
       activePlayersList.innerHTML = ""; // Clear current options
 
       players.sort().forEach(player => {
-          const option = document.createElement("option");
-          option.value = player;
-          activePlayersList.appendChild(option);
+        const option = document.createElement("option");
+        option.value = player;
+        activePlayersList.appendChild(option);
       });
-  }
-  
-    // Delete player from the list
-    async function deletePlayer(playerName) {
-      const response = await fetch(`/delete_player/${playerName}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify({ name: playerName }),
-      });
-  
-      if (response.ok) {
-        fetchPlayers(); // Re-fetch the updated player list
-      }
     }
-  
+
     // Fetch and display the players
     async function fetchPlayers() {
       const response = await fetch('/get_team');
@@ -89,6 +76,21 @@ document.addEventListener("DOMContentLoaded", function () {
         li.appendChild(deleteButton);
         teamList.appendChild(li);
       });
+    }
+  
+    // Delete player from the list
+    async function deletePlayer(playerName) {
+      const response = await fetch(`/delete_player/${playerName}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({ name: playerName }),
+      });
+  
+      if (response.ok) {
+        fetchPlayers(); // Re-fetch the updated player list
+      }
     }
   });
   
